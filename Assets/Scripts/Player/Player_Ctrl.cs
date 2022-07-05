@@ -8,7 +8,7 @@ public class Player_Ctrl : MonoBehaviour
     private Animator animator;
     private Rigidbody2D rb2D;
 
-    private bool isGround;
+    private bool LastMove;
 
     [System.Serializable]
     public struct PlayerState
@@ -19,6 +19,8 @@ public class Player_Ctrl : MonoBehaviour
         public int PlayerAmur;
         [Tooltip("플레이어스피드")]
         public int PlayerSpeed;
+        [Tooltip("플레이어대쉬스피드")]
+        public int PlayerDashSpeed;
         [Tooltip("플레이어점프높이")]
         public int PlayerJumpPower;
         [Tooltip("플레이어공격력")]
@@ -44,6 +46,15 @@ public class Player_Ctrl : MonoBehaviour
         public double SkillD_Time;
     }
 
+    [System.Serializable]
+    public struct PlayerCondition
+    {
+        [Tooltip("대쉬중")]
+        public bool Dashing;
+        [Tooltip("땅에 있는 중")]
+        public bool isGround;
+    }
+
     [Header("PlayerState")]
     [Tooltip("플레이어스탯")]
     public PlayerState PState;
@@ -52,6 +63,11 @@ public class Player_Ctrl : MonoBehaviour
     [Header("PlayerSkill")]
     [Tooltip("플레이어스킬")]
     public PlayerTime PTime;
+    [Space(10f)]
+
+    [Header("PlayerCondition")]
+    [Tooltip("플레이어상태")]
+    public PlayerCondition Cdn;
 
     private void Awake()
     {
@@ -70,6 +86,7 @@ public class Player_Ctrl : MonoBehaviour
     void Update()
     {
         Move();
+        Dash();
         Jump();
     }
 
@@ -80,23 +97,65 @@ public class Player_Ctrl : MonoBehaviour
             animator.SetBool("isRun", true);
             renderer.flipX = true;
             transform.Translate(Vector2.left * PState.PlayerSpeed * Time.deltaTime);
+            LastMove = true;
         }
         else if (Input.GetKey(KeyCode.RightArrow))
         {
             animator.SetBool("isRun", true);
             renderer.flipX = false;
             transform.Translate(Vector2.right * PState.PlayerSpeed * Time.deltaTime);
+            LastMove = false;
         }
         else
             animator.SetBool("isRun", false);
 
     }
 
+    private void Dash()
+    {
+        PTime.Dash_Time += Time.deltaTime;
+
+        if (Input.GetKeyDown(KeyCode.X) && Cdn.Dashing == false && PTime.Dash_Time >= 2.5f)
+        {
+            PTime.Dash_Time = 0;
+            Cdn.Dashing = true;
+            animator.SetBool("isDash", true);
+            animator.SetBool("isJump", false);
+            switch (LastMove)
+            {
+                case true:
+                    StartCoroutine(Dashed(-1));
+                    break;
+
+                case false:
+                    StartCoroutine(Dashed(1));
+                    break;
+            }
+
+        }
+
+    }
+
+    IEnumerator Dashed(int Vec)
+    {
+        for (int i = 0; i < 7; i++)
+        {
+            transform.Translate(Vector2.right * PState.PlayerDashSpeed * Vec * Time.deltaTime);
+            yield return new WaitForSecondsRealtime(0.01f);
+        }
+
+        animator.SetBool("isDash", false);
+        Cdn.Dashing = false;
+        yield break;
+    }
+
+
     private void Jump()
     {
-        if (Input.GetKeyDown(KeyCode.Z) && isGround == true)
+        if (Input.GetKeyDown(KeyCode.Z) && Cdn.isGround == true)
         {
             rb2D.AddForce(Vector2.up * PState.PlayerJumpPower, ForceMode2D.Impulse);
+            animator.SetBool("isJump", true);
         }
     }
 
@@ -107,12 +166,13 @@ public class Player_Ctrl : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        isGround = true;
+        animator.SetBool("isJump", false);
+        Cdn.isGround = true;
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        isGround = false;
+        Cdn.isGround = false;
     }
 
 }
