@@ -8,6 +8,8 @@ public class Player_Ctrl : MonoBehaviour
     private Animator animator;
     private Rigidbody2D rb2D;
 
+    private bool isGround;
+
     [System.Serializable]
     public struct PlayerState
     {
@@ -92,7 +94,7 @@ public class Player_Ctrl : MonoBehaviour
 
     private void Jump()
     {
-        if (Input.GetKeyDown(KeyCode.Z))
+        if (Input.GetKeyDown(KeyCode.Z) && isGround == true)
         {
             rb2D.AddForce(Vector2.up * PState.PlayerJumpPower, ForceMode2D.Impulse);
         }
@@ -101,6 +103,16 @@ public class Player_Ctrl : MonoBehaviour
     private void Attack()
     {
 
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        isGround = true;
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        isGround = false;
     }
 
 }

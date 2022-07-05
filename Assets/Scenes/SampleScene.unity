@@ -274,6 +274,7 @@ MonoBehaviour:
     PlayerHp: 100
     PlayerAmur: 5
     PlayerSpeed: 5
+    PlayerJumpPower: 8
     PlayerPower: 0
     SkillAPower: 0
     SkillSPower: 0
