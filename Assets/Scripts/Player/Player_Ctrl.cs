@@ -5,8 +5,9 @@ using UnityEngine;
 public class Player_Ctrl : MonoBehaviour
 {
     private SpriteRenderer renderer;
-    private Animator animator;
+    protected Animator animator;
     private Rigidbody2D rb2D;
+    private RaycastHit2D hit;
 
     private bool LastMove;
 
@@ -69,6 +70,8 @@ public class Player_Ctrl : MonoBehaviour
     [Tooltip("플레이어상태")]
     public PlayerCondition Cdn;
 
+    [SerializeField] private GameObject ATKObj;
+
     private void Awake()
     {
         renderer = gameObject.GetComponent<SpriteRenderer>();
@@ -88,6 +91,7 @@ public class Player_Ctrl : MonoBehaviour
         Move();
         Dash();
         Jump();
+        StartCoroutine(Attack());
     }
 
     private void Move()
@@ -159,9 +163,48 @@ public class Player_Ctrl : MonoBehaviour
         }
     }
 
-    private void Attack()
+    IEnumerator Attack()
     {
+        PTime.Dash_Time += Time.deltaTime;
 
+        if (Input.GetKeyDown(KeyCode.C) && PTime.Dash_Time >= 1)
+        {
+            GameObject ATKct;
+            PTime.Dash_Time = 0;
+
+            switch (Random.Range(1, 3))
+            {
+                case 1:
+                    animator.SetBool("isATK1", true);
+                    break;
+
+                case 2:
+                    animator.SetBool("isATK2", true);
+                    break;
+            }
+
+
+            if (LastMove == true)
+            {
+                Vector2 Pos = new Vector2(transform.position.x - 1, transform.position.y - 0.2f);
+                yield return new WaitForSecondsRealtime(0.1f);
+                ATKct = Instantiate(ATKObj, Pos, transform.rotation);
+                Destroy(ATKct, 0.1f);
+            }
+            else if (LastMove == false)
+            {
+                Vector2 Pos = new Vector2(transform.position.x + 1, transform.position.y - 0.2f);
+                yield return new WaitForSecondsRealtime(0.1f);
+                ATKct = Instantiate(ATKObj, Pos, transform.rotation);
+                Destroy(ATKct, 0.1f);
+            }
+
+
+            animator.SetBool("isATK1", false);
+            animator.SetBool("isATK2", false);
+        }
+
+        yield break;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

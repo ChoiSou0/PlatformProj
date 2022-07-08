@@ -251,7 +251,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 479953778}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.1583859, y: 1.8821434, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -288,6 +288,7 @@ MonoBehaviour:
   Cdn:
     Dashing: 0
     isGround: 0
+  ATKObj: {fileID: 5050983090802706686, guid: 4fe7aaf6879ec8648ab2e10d0161a40d, type: 3}
 --- !u!95 &479953785
 Animator:
   serializedVersion: 4
