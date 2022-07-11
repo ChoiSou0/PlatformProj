@@ -7,8 +7,6 @@ public class Player_Ctrl : MonoBehaviour
     private SpriteRenderer renderer;
     protected Animator animator;
     private Rigidbody2D rb2D;
-    private RaycastHit2D hit;
-
     private bool LastMove;
 
     [System.Serializable]
@@ -169,39 +167,44 @@ public class Player_Ctrl : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.C) && PTime.Dash_Time >= 1)
         {
+            Vector2 Pos = new Vector2(0, 0);
             GameObject ATKct;
             PTime.Dash_Time = 0;
 
-            switch (Random.Range(1, 3))
+            if (Cdn.isGround)
             {
-                case 1:
-                    animator.SetBool("isATK1", true);
-                    break;
+                switch (Random.Range(1, 3))
+                {
+                    case 1:
+                        animator.SetBool("isATK1", true);
+                        break;
 
-                case 2:
-                    animator.SetBool("isATK2", true);
-                    break;
+                    case 2:
+                        animator.SetBool("isATK2", true);
+                        break;
+                }
+                ATKObj.transform.localScale = new Vector3(3, 2, 1);
+
+                if (LastMove == true)
+                    Pos = new Vector2(transform.position.x - 1, transform.position.y - 0.2f);
+                else if (LastMove == false)
+                    Pos = new Vector2(transform.position.x + 1, transform.position.y - 0.2f);
+            }
+            else
+            {
+                Pos = new Vector2(transform.position.x, transform.position.y - 2);
+                ATKObj.transform.localScale = new Vector3(3, 2, 1);
+                animator.SetBool("isJATK", true);
             }
 
-
-            if (LastMove == true)
-            {
-                Vector2 Pos = new Vector2(transform.position.x - 1, transform.position.y - 0.2f);
-                yield return new WaitForSecondsRealtime(0.1f);
-                ATKct = Instantiate(ATKObj, Pos, transform.rotation);
-                Destroy(ATKct, 0.1f);
-            }
-            else if (LastMove == false)
-            {
-                Vector2 Pos = new Vector2(transform.position.x + 1, transform.position.y - 0.2f);
-                yield return new WaitForSecondsRealtime(0.1f);
-                ATKct = Instantiate(ATKObj, Pos, transform.rotation);
-                Destroy(ATKct, 0.1f);
-            }
+            ATKct = Instantiate(ATKObj, Pos, transform.rotation);
+            Destroy(ATKct, 0.1f);
+            yield return new WaitForSecondsRealtime(0.2f);
 
 
             animator.SetBool("isATK1", false);
             animator.SetBool("isATK2", false);
+            animator.SetBool("isJATK", false);
         }
 
         yield break;
