@@ -10,7 +10,13 @@ public class Player_Ctrl : MonoBehaviour
     private bool LastMove;
 
     [System.Serializable]
-    public struct PlayerState
+    public enum PlayerState
+    {
+        Idle, Run, Dash, Jump, ATK1, ATK2, JumpATK
+    }
+
+    [System.Serializable]
+    public struct PlayerStat
     {
         [Tooltip("플레이어체력")]
         public int PlayerHp;
@@ -56,7 +62,7 @@ public class Player_Ctrl : MonoBehaviour
 
     [Header("PlayerState")]
     [Tooltip("플레이어스탯")]
-    public PlayerState PState;
+    public PlayerStat PState;
     [Space(10f)]
 
     [Header("PlayerSkill")]
@@ -67,7 +73,12 @@ public class Player_Ctrl : MonoBehaviour
     [Header("PlayerCondition")]
     [Tooltip("플레이어상태")]
     public PlayerCondition Cdn;
+    [Space(10f)]
 
+    [Header("PlayerState")]
+    [Tooltip("플레이어애니메이션적용state")]
+    [SerializeField] private PlayerState state;
+    
     [SerializeField] private GameObject ATKObj;
 
     private void Awake()
@@ -80,7 +91,7 @@ public class Player_Ctrl : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        state = PlayerState.Idle;
     }
 
     // Update is called once per frame
@@ -213,6 +224,7 @@ public class Player_Ctrl : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         animator.SetBool("isJump", false);
+        animator.Play("Player_Idle");
         Cdn.isGround = true;
     }
 
