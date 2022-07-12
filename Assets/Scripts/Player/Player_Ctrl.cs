@@ -103,18 +103,41 @@ public class Player_Ctrl : MonoBehaviour
         StartCoroutine(Attack());
     }
 
+    private void PlayerAni()
+    {
+        animator.SetBool("isIdle", false);
+        switch(state)
+        {
+            case PlayerState.Idle:
+                break;
+            case PlayerState.Run:
+                break;
+            case PlayerState.Dash:
+                break;
+            case PlayerState.Jump:
+                break;
+            case PlayerState.ATK1:
+                break;
+            case PlayerState.ATK2:
+                break;
+            case PlayerState.JumpATK:
+                break;
+        }
+    }
+
     private void Move()
     {
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            animator.SetBool("isRun", true);
+
+            //animator.SetBool("isRun", true);
             renderer.flipX = true;
             transform.Translate(Vector2.left * PState.PlayerSpeed * Time.deltaTime);
             LastMove = true;
         }
         else if (Input.GetKey(KeyCode.RightArrow))
         {
-            animator.SetBool("isRun", true);
+            //animator.SetBool("isRun", true);
             renderer.flipX = false;
             transform.Translate(Vector2.right * PState.PlayerSpeed * Time.deltaTime);
             LastMove = false;
@@ -132,8 +155,8 @@ public class Player_Ctrl : MonoBehaviour
         {
             PTime.Dash_Time = 0;
             Cdn.Dashing = true;
-            animator.SetBool("isDash", true);
-            animator.SetBool("isJump", false);
+            //animator.SetBool("isDash", true);
+            //animator.SetBool("isJump", false);
             switch (LastMove)
             {
                 case true:
@@ -157,7 +180,7 @@ public class Player_Ctrl : MonoBehaviour
             yield return new WaitForSecondsRealtime(0.01f);
         }
 
-        animator.SetBool("isDash", false);
+        //animator.SetBool("isDash", false);
         Cdn.Dashing = false;
         yield break;
     }
@@ -223,8 +246,8 @@ public class Player_Ctrl : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        animator.SetBool("isJump", false);
-        animator.Play("Player_Idle");
+        //animator.SetBool("isJump", false);
+        //animator.Play("Player_Idle");
         Cdn.isGround = true;
     }
 
