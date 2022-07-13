@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Player_Ctrl : MonoBehaviour
 {
@@ -12,7 +13,8 @@ public class Player_Ctrl : MonoBehaviour
     [System.Serializable]
     public enum PlayerState
     {
-        Idle, Run, Dash, Jump, ATK1, ATK2, JumpATK
+        Idle, Run, Dash, Jump, ATK1, ATK2, JumpATK,
+        SkillA, SkillS, SkillD
     }
 
     [System.Serializable]
@@ -100,28 +102,51 @@ public class Player_Ctrl : MonoBehaviour
         Move();
         Dash();
         Jump();
+        Skill();
         StartCoroutine(Attack());
     }
 
-    private void PlayerAni()
+    private void PlayerAni(string AniType)
     {
-        animator.SetBool("isIdle", false);
+        state = (PlayerState)Enum.Parse(typeof(PlayerState), AniType);
+
+        animator.SetBool("isRun", false);
+        animator.SetBool("isDash", false);
+
         switch(state)
         {
             case PlayerState.Idle:
+                animator.Play("Player_Idle");
                 break;
             case PlayerState.Run:
+                animator.SetBool("isRun", true);
                 break;
             case PlayerState.Dash:
+                animator.SetBool("isDash", true);
+                animator.Play("Player_Dash");
                 break;
             case PlayerState.Jump:
+                animator.SetBool("isJump", true);
                 break;
             case PlayerState.ATK1:
+                animator.Play("Player_Attack1");
                 break;
             case PlayerState.ATK2:
+                animator.Play("Player_Attack2");
                 break;
             case PlayerState.JumpATK:
+                animator.Play("Player_JumpATK");
                 break;
+            case PlayerState.SkillA:
+                animator.Play("Player_SkillA");
+                break;
+            case PlayerState.SkillS:
+                animator.Play("Player_SkillS");
+                break;
+            case PlayerState.SkillD:
+                animator.Play("Player_SkillD");
+                break;
+
         }
     }
 
@@ -129,7 +154,7 @@ public class Player_Ctrl : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-
+            PlayerAni("Run");
             //animator.SetBool("isRun", true);
             renderer.flipX = true;
             transform.Translate(Vector2.left * PState.PlayerSpeed * Time.deltaTime);
@@ -137,6 +162,7 @@ public class Player_Ctrl : MonoBehaviour
         }
         else if (Input.GetKey(KeyCode.RightArrow))
         {
+            PlayerAni("Run");
             //animator.SetBool("isRun", true);
             renderer.flipX = false;
             transform.Translate(Vector2.right * PState.PlayerSpeed * Time.deltaTime);
@@ -153,6 +179,7 @@ public class Player_Ctrl : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.X) && Cdn.Dashing == false && PTime.Dash_Time >= 2.5f)
         {
+            PlayerAni("Dash");
             PTime.Dash_Time = 0;
             Cdn.Dashing = true;
             //animator.SetBool("isDash", true);
@@ -182,6 +209,7 @@ public class Player_Ctrl : MonoBehaviour
 
         //animator.SetBool("isDash", false);
         Cdn.Dashing = false;
+        PlayerAni("Idle");
         yield break;
     }
 
@@ -207,14 +235,14 @@ public class Player_Ctrl : MonoBehaviour
 
             if (Cdn.isGround)
             {
-                switch (Random.Range(1, 3))
+                switch (UnityEngine.Random.Range(1, 3))
                 {
                     case 1:
-                        animator.SetBool("isATK1", true);
+                        PlayerAni("ATK1");
                         break;
 
                     case 2:
-                        animator.SetBool("isATK2", true);
+                        PlayerAni("ATK2");
                         break;
                 }
                 ATKObj.transform.localScale = new Vector3(3, 2, 1);
@@ -228,26 +256,33 @@ public class Player_Ctrl : MonoBehaviour
             {
                 Pos = new Vector2(transform.position.x, transform.position.y - 2);
                 ATKObj.transform.localScale = new Vector3(3, 2, 1);
-                animator.SetBool("isJATK", true);
+                PlayerAni("JumpATK");
             }
 
             ATKct = Instantiate(ATKObj, Pos, transform.rotation);
             Destroy(ATKct, 0.1f);
             yield return new WaitForSecondsRealtime(0.2f);
 
-
-            animator.SetBool("isATK1", false);
-            animator.SetBool("isATK2", false);
-            animator.SetBool("isJATK", false);
         }
 
         yield break;
     }
 
+    private void Skill()
+    {
+        if (Input.GetKeyDown(KeyCode.A))
+            PlayerAni("SkillA");
+        else if (Input.GetKeyDown(KeyCode.S))
+            PlayerAni("SkillS");
+        else if (Input.GetKeyDown(KeyCode.D))
+            PlayerAni("SkillD");
+    }
+
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        //animator.SetBool("isJump", false);
-        //animator.Play("Player_Idle");
+        animator.SetBool("isJump", false);
+        PlayerAni("Idle");
         Cdn.isGround = true;
     }
 
