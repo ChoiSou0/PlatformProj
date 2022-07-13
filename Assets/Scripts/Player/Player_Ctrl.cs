@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using DG.Tweening;
 
 public class Player_Ctrl : MonoBehaviour
 {
@@ -82,6 +83,8 @@ public class Player_Ctrl : MonoBehaviour
     [SerializeField] private PlayerState state;
     
     [SerializeField] private GameObject ATKObj;
+    [SerializeField] private GameObject CharmGuk;
+    [SerializeField] private GameObject NukBak;
 
     private void Awake()
     {
@@ -290,5 +293,22 @@ public class Player_Ctrl : MonoBehaviour
     {
         Cdn.isGround = false;
     }
+
+    // 애니메이션 함수
+    #region
+    public void CreateCharmGuk()
+    {
+        var CharmGukObj = Instantiate(CharmGuk, transform.position, Quaternion.identity);
+        Destroy(CharmGukObj, 1f);
+    }
+
+    public void CreateNukbak()
+    {
+        var NukBakObj = Instantiate(NukBak, transform.position, Quaternion.identity);
+        Destroy(NukBakObj, 0.3f);
+        NukBakObj.transform.DOScale(new Vector2(5, 5), 0.3f);
+    }
+
+    #endregion
 
 }
