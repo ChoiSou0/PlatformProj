@@ -44,6 +44,8 @@ public class Player_Ctrl : MonoBehaviour
     [System.Serializable]
     public struct PlayerTime
     {
+        [Tooltip("공격쿨타임")]
+        public double ATK_Time;
         [Tooltip("대쉬쿨타임")]
         public double Dash_Time;
         [Tooltip("플레이어스킬A쿨타임")]
@@ -228,13 +230,13 @@ public class Player_Ctrl : MonoBehaviour
 
     IEnumerator Attack()
     {
-        PTime.Dash_Time += Time.deltaTime;
+        PTime.ATK_Time += Time.deltaTime;
 
-        if (Input.GetKeyDown(KeyCode.C) && PTime.Dash_Time >= 1)
+        if (Input.GetKeyDown(KeyCode.C) && PTime.ATK_Time >= 1)
         {
             Vector2 Pos = new Vector2(0, 0);
             GameObject ATKct;
-            PTime.Dash_Time = 0;
+            PTime.ATK_Time = 0;
 
             if (Cdn.isGround)
             {
@@ -273,12 +275,25 @@ public class Player_Ctrl : MonoBehaviour
 
     private void Skill()
     {
-        if (Input.GetKeyDown(KeyCode.A))
+        PTime.SkillA_Time += Time.deltaTime;
+        PTime.SkillS_Time += Time.deltaTime;
+        PTime.SkillD_Time += Time.deltaTime;
+
+        if (Input.GetKeyDown(KeyCode.A) && PTime.SkillA_Time >= 7)
+        {
             PlayerAni("SkillA");
-        else if (Input.GetKeyDown(KeyCode.S))
+            PTime.SkillA_Time = 0;
+        }
+        else if (Input.GetKeyDown(KeyCode.S) && PTime.SkillS_Time >= 14)
+        {
             PlayerAni("SkillS");
-        else if (Input.GetKeyDown(KeyCode.D))
+            PTime.SkillS_Time = 0;
+        }
+        else if (Input.GetKeyDown(KeyCode.D) && PTime.SkillD_Time >= 30)
+        {
             PlayerAni("SkillD");
+            PTime.SkillD_Time = 0;
+        }
     }
 
 
