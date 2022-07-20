@@ -141,6 +141,7 @@ GameObject:
   - component: {fileID: 31601440}
   - component: {fileID: 31601439}
   - component: {fileID: 31601438}
+  - component: {fileID: 31601443}
   m_Layer: 0
   m_Name: Wolf
   m_TagString: Untagged
@@ -282,6 +283,29 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &31601443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 31601437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c0d6348ee4055b4f96cec4dd3b89e43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Wolfanimator: {fileID: 31601438}
+  wolfAni: 0
+  stat:
+    Wolf_Hp: 0
+    Wolf_Power: 0
+    Wolf_Speed: 2
+    Wolf_Aumr: 0
+  NotChase:
+    Vec: 1
+    MoveMax: 0
+    isChase: 0
 --- !u!1 &479953778
 GameObject:
   m_ObjectHideFlags: 0
@@ -434,7 +458,7 @@ MonoBehaviour:
     PlayerAmur: 5
     PlayerSpeed: 5
     PlayerDashSpeed: 100
-    PlayerJumpPower: 8
+    PlayerJumpPower: 10
     PlayerPower: 0
     SkillAPower: 0
     SkillSPower: 0
@@ -448,7 +472,7 @@ MonoBehaviour:
   Cdn:
     Dashing: 0
     isGround: 0
-  state: 0
+  Pstate: 0
   ATKObj: {fileID: 5050983090802706686, guid: 4fe7aaf6879ec8648ab2e10d0161a40d, type: 3}
   CharmGuk: {fileID: 7850676486355013092, guid: 440224f32a6a4f148b11a82b3ae2d77c, type: 3}
   NukBak: {fileID: 22556167}

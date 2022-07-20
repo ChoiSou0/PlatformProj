@@ -7,7 +7,7 @@ using DG.Tweening;
 public class Player_Ctrl : MonoBehaviour
 {
     private SpriteRenderer renderer;
-    protected Animator animator;
+    private Animator animator;
     private Rigidbody2D rb2D;
     private bool LastMove;
 
@@ -80,13 +80,39 @@ public class Player_Ctrl : MonoBehaviour
     public PlayerCondition Cdn;
     [Space(10f)]
 
+    private State state;
+
     [Header("PlayerState")]
     [Tooltip("플레이어애니메이션적용state")]
-    [SerializeField] private PlayerState state;
+    [SerializeField] private PlayerState Pstate;
     
     [SerializeField] private GameObject ATKObj;
     [SerializeField] private GameObject CharmGuk;
     [SerializeField] private GameObject NukBak;
+
+    //public void SetActionType(PlayerState Pstate)
+    //{
+    //    this.Pstate = Pstate;
+
+    //    Component c = gameObject.GetComponent<State>() as Component;
+
+    //    Debug.Log(c);
+
+    //    if (c != null)
+    //        Destroy(c);
+
+    //    switch (Pstate)
+    //    {
+    //        case PlayerState.Idle:
+    //            state = gameObject.AddComponent<PlayerIdle>();
+    //            state.Action(Pstate);
+    //            break;
+    //        case PlayerState.Run:
+    //            state = gameObject.AddComponent<PlayerRun>();
+    //            state.Action(Pstate);
+    //            break;
+    //    }
+    //}
 
     private void Awake()
     {
@@ -98,12 +124,58 @@ public class Player_Ctrl : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        state = PlayerState.Idle;
+        //SetActionType(PlayerState.Idle);
     }
 
     // Update is called once per frame
     void Update()
     {
+        //switch (Pstate)
+        //{
+        //    case PlayerState.Idle:
+        //        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow))
+        //            SetActionType(PlayerState.Run);
+        //        break;
+        //    case PlayerState.Run:
+        //        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow))
+        //            SetActionType(PlayerState.Run);
+        //        else if (Input.GetKeyDown(KeyCode.Z))
+        //            SetActionType(PlayerState.Jump);
+        //        else if (Input.GetKeyDown(KeyCode.X))
+        //            Pstate = PlayerState.Dash;
+        //        else if (Input.GetKeyDown(KeyCode.C))
+        //        {
+        //            switch (UnityEngine.Random.Range(0, 2))
+        //            {
+        //                case 0:
+        //                    Pstate = PlayerState.ATK1;
+        //                    break;
+        //                case 1:
+        //                    Pstate = PlayerState.ATK2;
+        //                    break;
+        //            }
+        //        }
+        //        else if (Input.GetKeyDown(KeyCode.A))
+        //            Pstate = PlayerState.SkillA;
+        //        else if (Input.GetKeyDown(KeyCode.S))
+        //            Pstate = PlayerState.SkillS;
+        //        else if (Input.GetKeyDown(KeyCode.D))
+        //            Pstate = PlayerState.SkillD;
+        //        else
+        //            Pstate = PlayerState.Idle;
+        //        break;
+        //    case PlayerState.Jump:
+        //        if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow))
+        //            Pstate = PlayerState.Jump;
+        //        else if (Input.GetKeyDown(KeyCode.C))
+        //            Pstate = PlayerState.JumpATK;
+        //        else if (Input.GetKeyDown(KeyCode.X))
+        //            Pstate = PlayerState.Dash;
+        //        break;
+
+
+        //}
+
         Move();
         Dash();
         Jump();
@@ -113,12 +185,12 @@ public class Player_Ctrl : MonoBehaviour
 
     private void PlayerAni(string AniType)
     {
-        state = (PlayerState)Enum.Parse(typeof(PlayerState), AniType);
+        Pstate = (PlayerState)Enum.Parse(typeof(PlayerState), AniType);
 
         animator.SetBool("isRun", false);
         animator.SetBool("isDash", false);
 
-        switch(state)
+        switch (Pstate)
         {
             case PlayerState.Idle:
                 animator.Play("Player_Idle");
@@ -153,6 +225,8 @@ public class Player_Ctrl : MonoBehaviour
                 break;
 
         }
+
+
     }
 
     private void Move()
