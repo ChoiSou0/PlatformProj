@@ -51,16 +51,48 @@ public class Wolf_Ctrl : Enermy
     // Update is called once per frame
     void Update()
     {
+
         StartCoroutine(Wander());
+        Move();
+    }
+
+    private void SetAni(WolfAni wolfAni)
+    {
+        animator.SetBool("isIdle", false);
+        animator.SetBool("isRun", false);
+
+        switch(wolfAni)
+        {
+            case WolfAni.Idle:
+                break;
+            case WolfAni.Run:
+                break;
+            case WolfAni.Attack:
+                break;
+            case WolfAni.Die:
+                break;
+        }
+    }
+
+    IEnumerator Attack()
+    {
+        
+
+        yield return null;
     }
 
     protected override void Move()
     {
         if (NotChase.isChase)
         {
+            SetAni(WolfAni.Run);
             if (transform.position.x > Target.position.x)
             {
-                s
+                transform.Translate(Vector2.left * stat.Wolf_Speed * Time.deltaTime);
+            }
+            else if (transform.position.x < Target.position.x)
+            {
+                transform.Translate(Vector2.left * stat.Wolf_Speed * Time.deltaTime);
             }
         }
     }
@@ -69,6 +101,7 @@ public class Wolf_Ctrl : Enermy
     {
         if (!NotChase.isChase && NotChase.MoveMax <= 2)
         {
+            SetAni(WolfAni.Run);
             if (NotChase.Vec > 0)
                 renderer.flipX = true;
             else if (NotChase.Vec < 0)
@@ -79,6 +112,7 @@ public class Wolf_Ctrl : Enermy
 
             if (NotChase.MoveMax >= 2)
             {
+                SetAni(WolfAni.Idle);
                 yield return new WaitForSecondsRealtime(2);
                 NotChase.Vec *= -1;
                 NotChase.MoveMax = 0;
