@@ -4,66 +4,66 @@ using UnityEngine;
 using System;
 using DG.Tweening;
 
+[System.Serializable]
+public enum PlayerState
+{
+    Idle, Run, Dash, Jump, ATK1, ATK2, JumpATK,
+    SkillA, SkillS, SkillD
+}
+
+[System.Serializable]
+public struct PlayerStat
+{
+    [Tooltip("플레이어체력")]
+    public int PlayerHp;
+    [Tooltip("플레이어방어력")]
+    public int PlayerAmur;
+    [Tooltip("플레이어스피드")]
+    public int PlayerSpeed;
+    [Tooltip("플레이어대쉬스피드")]
+    public int PlayerDashSpeed;
+    [Tooltip("플레이어점프높이")]
+    public int PlayerJumpPower;
+    [Tooltip("플레이어공격력")]
+    public static int PlayerPower = 10;
+    [Tooltip("플레이어스킬A공격력")]
+    public int SkillAPower;
+    [Tooltip("플레이어스킬S공격력")]
+    public int SkillSPower;
+    [Tooltip("플레이어스킬D공격력")]
+    public int SkillDPower;
+}
+
+[System.Serializable]
+public struct PlayerTime
+{
+    [Tooltip("공격쿨타임")]
+    public double ATK_Time;
+    [Tooltip("대쉬쿨타임")]
+    public double Dash_Time;
+    [Tooltip("플레이어스킬A쿨타임")]
+    public double SkillA_Time;
+    [Tooltip("플레이어스킬S쿨타임")]
+    public double SkillS_Time;
+    [Tooltip("플레이어스킬D쿨타임")]
+    public double SkillD_Time;
+}
+
+[System.Serializable]
+public struct PlayerCondition
+{
+    [Tooltip("대쉬중")]
+    public bool Dashing;
+    [Tooltip("땅에 있는 중")]
+    public bool isGround;
+}
+
 public class Player_Ctrl : MonoBehaviour
 {
     private SpriteRenderer renderer;
     private Animator animator;
     private Rigidbody2D rb2D;
     private bool LastMove;
-
-    [System.Serializable]
-    public enum PlayerState
-    {
-        Idle, Run, Dash, Jump, ATK1, ATK2, JumpATK,
-        SkillA, SkillS, SkillD
-    }
-
-    [System.Serializable]
-    public struct PlayerStat
-    {
-        [Tooltip("플레이어체력")]
-        public int PlayerHp;
-        [Tooltip("플레이어방어력")]
-        public int PlayerAmur;
-        [Tooltip("플레이어스피드")]
-        public int PlayerSpeed;
-        [Tooltip("플레이어대쉬스피드")]
-        public int PlayerDashSpeed;
-        [Tooltip("플레이어점프높이")]
-        public int PlayerJumpPower;
-        [Tooltip("플레이어공격력")]
-        public int PlayerPower;
-        [Tooltip("플레이어스킬A공격력")]
-        public int SkillAPower;
-        [Tooltip("플레이어스킬S공격력")]
-        public int SkillSPower;
-        [Tooltip("플레이어스킬D공격력")]
-        public int SkillDPower;
-    }
-
-    [System.Serializable]
-    public struct PlayerTime
-    {
-        [Tooltip("공격쿨타임")]
-        public double ATK_Time;
-        [Tooltip("대쉬쿨타임")]
-        public double Dash_Time;
-        [Tooltip("플레이어스킬A쿨타임")]
-        public double SkillA_Time;
-        [Tooltip("플레이어스킬S쿨타임")]
-        public double SkillS_Time;
-        [Tooltip("플레이어스킬D쿨타임")]
-        public double SkillD_Time;
-    }
-
-    [System.Serializable]
-    public struct PlayerCondition
-    {
-        [Tooltip("대쉬중")]
-        public bool Dashing;
-        [Tooltip("땅에 있는 중")]
-        public bool isGround;
-    }
 
     [Header("PlayerState")]
     [Tooltip("플레이어스탯")]

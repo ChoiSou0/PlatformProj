@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 7850676486355013112}
   - component: {fileID: 7850676486355013115}
   - component: {fileID: 7850676486355013113}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: CharmGuk
-  m_TagString: Untagged
+  m_TagString: CharmGuk
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -20,6 +20,7 @@ public class Wolf_Ctrl : Enermy
         public int Wolf_Power;
         public int Wolf_Speed;
         public int Wolf_Aumr;
+        public int Wolf_ATKSpeed;
     }
 
     [System.Serializable]
@@ -28,6 +29,10 @@ public class Wolf_Ctrl : Enermy
         public int Vec;
         public double MoveMax;
         public bool isChase;
+        public bool isAttack;
+        public double ATKTime;
+        public double CoolTime;
+        public float RGB;
     }
 
     [Tooltip("´Á´ë¾Ö´Ï")]
@@ -51,48 +56,107 @@ public class Wolf_Ctrl : Enermy
     // Update is called once per frame
     void Update()
     {
+        if (stat.Wolf_Hp <= 0)
+            Die();
+        else
+        {
+            StartCoroutine(Attack());
+            StartCoroutine(Wander());
+            Move();
+        }
 
-        StartCoroutine(Wander());
-        Move();
     }
 
     private void SetAni(WolfAni wolfAni)
     {
         animator.SetBool("isIdle", false);
         animator.SetBool("isRun", false);
+        animator.SetBool("isAttack", false);
 
         switch(wolfAni)
         {
             case WolfAni.Idle:
+                animator.SetBool("isIdle", true);
                 break;
             case WolfAni.Run:
+                animator.SetBool("isRun", true);
                 break;
             case WolfAni.Attack:
+                animator.Play("Wolf_Attack");
                 break;
             case WolfAni.Die:
+                animator.Play("Wolf_Died");
                 break;
         }
     }
 
-    IEnumerator Attack()
+    private void Die()
     {
         
+        if (NotChase.RGB == 1)
+            SetAni(WolfAni.Die);
+
+        NotChase.RGB -= Time.deltaTime;
+        renderer.color = new Color(1, 1, 1, NotChase.RGB);
+        if (NotChase.RGB <= 0)
+            Destroy(gameObject);
+    }
+
+    IEnumerator Attack()
+    {
+        NotChase.CoolTime += Time.deltaTime;
+
+        if (NotChase.isAttack && NotChase.CoolTime >= 3)
+        {
+            NotChase.isAttack = true;
+
+            if (NotChase.ATKTime == 0)
+                SetAni(WolfAni.Attack);
+
+            NotChase.ATKTime += Time.deltaTime;
+
+            if (NotChase.ATKTime <= 0.8f)
+            {
+                if (renderer.flipX)
+                    transform.Translate(Vector2.right * stat.Wolf_ATKSpeed * Time.deltaTime);
+                else
+                    transform.Translate(Vector2.left * stat.Wolf_ATKSpeed * Time.deltaTime);
+            }
+
+            if (NotChase.ATKTime > 1)
+            {
+                SetAni(WolfAni.Run);
+                NotChase.isAttack = false;
+                NotChase.ATKTime = 0;
+                NotChase.CoolTime = 0;
+            }
+        }
 
         yield return null;
     }
 
     protected override void Move()
     {
+        Vector2 v = transform.position - Target.position;
+        double r = Mathf.Abs(v.x) + Mathf.Abs(v.y);
+        if (r < 8)
+            NotChase.isChase = true;
+        if (r < 5)
+            NotChase.isAttack = true;
+
+
         if (NotChase.isChase)
         {
             SetAni(WolfAni.Run);
             if (transform.position.x > Target.position.x)
             {
+                renderer.flipX = false;
                 transform.Translate(Vector2.left * stat.Wolf_Speed * Time.deltaTime);
             }
             else if (transform.position.x < Target.position.x)
             {
-                transform.Translate(Vector2.left * stat.Wolf_Speed * Time.deltaTime);
+                renderer.flipX = true;
+                transform.Translate(Vector2.right * stat.Wolf_Speed * Time.deltaTime);
             }
         }
     }
@@ -122,4 +186,13 @@ public class Wolf_Ctrl : Enermy
 
         yield return null;
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "PlayerAttack")
+        {
+            stat.Wolf_Hp -= PlayerStat.PlayerPower;
+        }
+    }
+
 }

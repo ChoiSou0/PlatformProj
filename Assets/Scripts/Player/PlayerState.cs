@@ -4,6 +4,6 @@ using UnityEngine;
 
 public abstract class State : MonoBehaviour
 {
-    public abstract void Action(Player_Ctrl.PlayerState playerState);
+    public abstract void Action(PlayerState playerState);
 };
 

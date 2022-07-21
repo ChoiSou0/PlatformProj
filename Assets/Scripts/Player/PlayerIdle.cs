@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerIdle : State
 {
-    public override void Action(Player_Ctrl.PlayerState playerState)
+    public override void Action(PlayerState playerState)
     {
         Debug.Log("±âº»");
     }
