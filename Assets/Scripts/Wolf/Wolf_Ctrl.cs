@@ -6,6 +6,7 @@ public class Wolf_Ctrl : Enermy
 {
     private Animator animator;
     private SpriteRenderer renderer;
+    private Rigidbody2D rb;
 
     [System.Serializable]
     public enum WolfAni
@@ -19,6 +20,7 @@ public class Wolf_Ctrl : Enermy
         public int Wolf_Hp;
         public int Wolf_Power;
         public int Wolf_Speed;
+        public int Wolf_BackPower;
         public int Wolf_Aumr;
         public int Wolf_ATKSpeed;
     }
@@ -51,6 +53,7 @@ public class Wolf_Ctrl : Enermy
     {
         animator = GetComponent<Animator>();
         renderer = GetComponent<SpriteRenderer>();
+        rb = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
@@ -191,6 +194,15 @@ public class Wolf_Ctrl : Enermy
     {
         if (collision.gameObject.tag == "PlayerAttack")
         {
+            switch(renderer.flipX)
+            {
+                case true:
+                    rb.AddForce(Vector2.right * stat.Wolf_BackPower, ForceMode2D.Impulse);
+                    break;
+                case false:
+                    rb.AddForce(Vector2.left * stat.Wolf_BackPower, ForceMode2D.Impulse);
+                    break;
+            }
             stat.Wolf_Hp -= PlayerStat.PlayerPower;
         }
     }
